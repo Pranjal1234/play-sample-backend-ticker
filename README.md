@@ -35,3 +35,9 @@ To build and run the project:
 3. After the message `Server started, ...` displays, enter the following URL in a browser: <http://localhost:9000>
 
 The Play application responds: `Stock Watchlist!`
+
+## How to use
+
+Once on the home page, there is a link to the watch list. `Stock Watch List`
+
+On the watchlist page, there is a text field to input Stock symbol to add to the list. Once the stock is added to the list, there is a link for each stock on the symbol and an option to delete at the end.
