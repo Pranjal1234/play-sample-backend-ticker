@@ -1,4 +1,4 @@
-# Play Sample Backend Ticker using Scala
+# Play Sample Backend Ticker using Scala - Play Framework
 
 To follow the steps in this tutorial, you will need the correct version of Java and sbt. The template requires:
 
