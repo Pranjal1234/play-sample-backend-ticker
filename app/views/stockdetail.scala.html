@@ -1,0 +1,32 @@
+@(stock: StockWidget)
+
+@main {
+    <h1>@stock.name</h1>
+    <p>
+      Stock price is pushed from the Server using a Server Sent Event connection. The price should be in real time.
+    </p>
+    <h2 id="stock"></h2>
+
+    <table id="stock-detail">
+        <tr><td><b>Symbol</b></td><td>@stock.symbol</td></tr>
+        <tr><td><b>Price Average (50 day)</b></td><td>@stock.priceAvg50</td></tr>
+        <tr><td><b>Price Average (200 day)</b></td><td>@stock.priceAvg200</td></tr>
+        <tr><td><b>Dividend</b></td><td>@stock.dividend</td></tr>
+        <tr><td><b>Low 52 week</b></td><td>@stock.lowYear</td></tr>
+        <tr><td><b>High 52 week</b></td><td>@stock.highYear</td></tr>
+    </table>
+    <br>
+    <a href="@routes.StockWidgetController.listWidgets">Back to Watchlist</a>
+
+    <script type="text/javascript" charset="utf-8">
+
+       if (!!window.EventSource) {
+         var stringSource = new EventSource("@routes.StockSourceController.streamStockTicker(stock.symbol)")
+         stringSource.addEventListener('message', function(e) {
+            $('#stock').html(e.data.replace(/(\d)/g, '<span>$1</span>'))
+         });
+       } else {
+         $("#stock").html("Sorry. This browser doesn't seem to support Server sent event. Check <a href='http://html5test.com/compare/feature/communication-eventSource.html'>html5test</a> for browser compatibility.");
+       }
+    </script>
+}

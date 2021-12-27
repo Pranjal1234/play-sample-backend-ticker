@@ -1,0 +1,60 @@
+@(widgets: Seq[StockWidget], form: Form[StockWidgetForm.Data], postUrl: Call)(implicit request: MessagesRequestHeader)
+
+  @main {
+
+    <script>
+      function deleteWidget(url) {
+        var token =  $('input[name="csrfToken"]').attr('value')
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Csrf-Token', token);
+            }
+        });
+
+        $.ajax({
+          url: url,
+          type: 'DELETE',
+          success: function(result) {
+            window.location = '/watchlist'
+          },
+          error: function(result){console.log(result)}
+        });
+      }
+    </script>
+
+    <h1>Stock Watchlist</h1>
+
+    <p>This is the stock watchlist, please click on the stock symbol to get more information. 
+      <br> Please use the form at the bottom to add stocks to the watchlist, please only input stock symbols</p>
+
+    <table id="watch-list">
+      <thead>
+        <tr><th>Symbol</th><th>Price</th><th>Name</th><th>Delete Button</th></tr>
+      </thead>
+      <tbody>
+      @for(w <- widgets) {
+        <tr>
+            <td><a href="@routes.StockSourceController.index(w.symbol)">@w.symbol</td>
+            <td>@w.price</td><td>@w.name</td>      
+            <td><span onclick="deleteWidget('@routes.StockWidgetController.removeWidget(w.symbol)')"><b>Delete</b></span></td>
+        </tr>
+      }
+      </tbody>
+    </table>
+
+    <hr/>
+
+    @* Global errors are not tied to any particular form field *@
+    @if(form.hasGlobalErrors) {
+      @form.globalErrors.map { error: FormError =>
+        <div>
+          @error.key: @error.message
+        </div>
+      }
+    }
+
+    @helper.form(postUrl) {
+      @helper.CSRF.formField
+      @helper.inputText(form("symbol"), Symbol("_label")  -> "Symbol: ") <button>Add Stock</button>
+    }
+  }
